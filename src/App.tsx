@@ -2,7 +2,7 @@ import './App.css';
 import Title from "./components/Title";
 import Form from "./components/Form";
 import Results from "./components/Results";
-import {useState} from "react";
+import React, {useState} from "react";
 
 type ResultStateType = {
     country : string;
@@ -11,6 +11,8 @@ type ResultStateType = {
     conditionText : string;
     icon : string;
 }
+
+const apikey = process.env.REACT_APP_API_KEY
 
 function App() {
     const [city, setCity] = useState<string>("");
@@ -21,9 +23,9 @@ function App() {
         conditionText: "",
         icon: ""
     });
-    const getWeather = (e: any) =>{
+    const getWeather = (e: React.FormEvent<HTMLFormElement>) =>{
         e.preventDefault();
-        fetch(`https://api.weatherapi.com/v1/current.json?key=API_KEY&q=${city}&aqi=no`)
+        fetch(`https://api.weatherapi.com/v1/current.json?key=${apikey}&q=${city}&aqi=no`)
             .then(res => res.json())
             .then(data => setResults({
                 country:data.location.country,
@@ -35,10 +37,12 @@ function App() {
             ))
     };
   return (
-    <div className="App">
-        <Title/>
-        <Form setCity={setCity} getWeather={getWeather}/>
-        <Results results={results}/>
+    <div className="wrapper">
+        <div className="container">
+            <Title/>
+            <Form setCity={setCity} getWeather={getWeather}/>
+            <Results results={results}/>
+        </div>
     </div>
   );
 }
